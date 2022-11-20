@@ -1,2 +1,2 @@
 # java-filmorate
-Template repository for Filmorate project.
+Работа по созданию соцсети с тематикой фильмов
