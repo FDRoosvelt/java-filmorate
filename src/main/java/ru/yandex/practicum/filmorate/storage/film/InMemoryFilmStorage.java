@@ -12,7 +12,7 @@ import static java.time.Month.DECEMBER;
 
 @Component
 public class InMemoryFilmStorage implements FilmStorage {
-    private static long filmId = 0;
+    private static long filmId = 1;
     private static final Map<Long, Film> films = new HashMap<>();
 
     private static long nextFilmId() {

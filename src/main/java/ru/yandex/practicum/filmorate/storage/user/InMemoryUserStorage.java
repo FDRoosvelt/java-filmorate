@@ -9,7 +9,7 @@ import java.util.Map;
 
 @Component
 public class InMemoryUserStorage implements UserStorage {
-    private static long postId = 0;
+    private static long postId = 1;
     private static final Map<Long, User> users = new HashMap<>();
 
     private static long nextPostId() {
