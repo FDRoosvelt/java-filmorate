@@ -2,17 +2,18 @@ package ru.yandex.practicum.filmorate.controller;
 
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
+import static org.junit.jupiter.api.Assertions.*;
 import java.time.LocalDate;
 import static java.time.Month.JANUARY;
-import static org.junit.jupiter.api.Assertions.*;
 
-class UserControllerTest {
+public class UserControllerTest {
 
     @Test
     void userMustBeLogin() {
-        UserController userController = new UserController();
-        User user = new User("login", null,100, "test@test.test", LocalDate.of(2000, JANUARY, 1));
-        userController.addUser(user);
+        InMemoryUserStorage inMemoryUserStorage = new InMemoryUserStorage();
+        User user = new User("login", null, "test@test.test", LocalDate.of(2000, JANUARY, 1));
+        inMemoryUserStorage.addUser(user);
         assertEquals("login", user.getName());
     }
 }
