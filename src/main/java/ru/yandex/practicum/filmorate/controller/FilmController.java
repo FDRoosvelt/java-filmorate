@@ -6,11 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
-import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
-import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
-import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
-import ru.yandex.practicum.filmorate.storage.user.UserStorage;
-
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.Collection;
@@ -20,30 +15,27 @@ import java.util.List;
 @RestController
 @RequestMapping("/films")
 public class FilmController {
-    FilmStorage filmStorage;
-    UserStorage userStorage;
     FilmService filmService;
 
 
     @Autowired
-    public FilmController(InMemoryFilmStorage inMemoryFilmStorage,
-                          InMemoryUserStorage inMemoryUserStorage,
-                          FilmService filmService) {
-        filmStorage = inMemoryFilmStorage;
-        userStorage = inMemoryUserStorage;
+    public FilmController(FilmService filmService) {
         this.filmService = filmService;
     }
 
     @GetMapping
     public Collection<Film> getFilms() {
         log.info("Получен запрос GET /films");
-        return filmStorage.getFilms();
+        return filmService.getFilms();
     }
 
     @GetMapping("/{filmId}")
     public Film getFilm(@PathVariable("filmId") Long id) {
+        if (id < 1) {
+            throw new ValidationException("Данные введены неверно");
+        }
         log.info("Получен запрос GET /film/{filmId}");
-        return filmStorage.findFilmById(id);
+        return filmService.findFilmById(id);
     }
 
     @GetMapping("/popular")
@@ -52,32 +44,47 @@ public class FilmController {
             throw new ValidationException("Неверное кол-во фильмов");
         }
         log.info("Получен запрос GET /films/popular");
-        return filmService.getPopularFilms(filmStorage, count);
+        return filmService.getPopularFilms(count);
     }
 
     @PostMapping()
     public Film addFilm(@Valid @RequestBody @NotNull Film film) {
         log.info("Получен запрос POST /films");
-        return filmStorage.addFilm(film);
+        return filmService.addFilm(film);
     }
 
     @PutMapping()
     public Film updateFilm(@Valid @RequestBody Film film) {
         log.info("Получен запрос PUT /films");
-        return filmStorage.updateFilm(film);
+        return filmService.updateFilm(film);
     }
 
     @PutMapping("/{id}/like/{userId}")
     public Film likeFilm(@PathVariable("id") long id,
                          @PathVariable("userId") long userId) {
+        if (id < 1 || userId < 1) {
+            throw new ValidationException("Данные введены неверно");
+        }
         log.info("Получен запрос PUT /films/{id}/like/{userId}");
-        return filmService.addLike(filmStorage, userStorage, id, userId);
+        return filmService.addLike(id, userId);
     }
 
     @DeleteMapping("/{id}/like/{userId}")
     public Film deleteLike(@PathVariable("id") long id,
                            @PathVariable("userId") long userId) {
+        if (id < 1 || userId < 1) {
+            throw new ValidationException("Данные введены неверно");
+        }
         log.info("Получен запрос DELETE /films/{id}/like/{userId}");
-        return filmService.deleteLike(filmStorage, userStorage, id, userId);
+        return filmService.deleteLike(id, userId);
+    }
+
+    @DeleteMapping("/{id}")
+    public String deleteFilm(@PathVariable("id") long id) {
+        if (id < 1) {
+            throw new ValidationException("Данные введены неверно");
+        }
+        log.info("Получен запрос DELETE /films/{id}/");
+        return filmService.deleteFilm(id);
     }
 }

@@ -50,10 +50,15 @@ public class InMemoryFilmStorage implements FilmStorage {
         return film;
     }
 
-    private boolean releaseDateLogic(Film film) {
-        if (film.getReleaseDate().isBefore(LocalDate.of(1895, DECEMBER, 28))) {
-            return false;
+    public String deleteFilm(Long id) {
+        if (!films.containsKey(id)) {
+            throw new ObjectNotFoundException("Фильм не найден");
         }
-        return true;
+        films.remove(id);
+        return "Фильм удален";
+    }
+
+    private boolean releaseDateLogic(Film film) {
+        return !film.getReleaseDate().isBefore(LocalDate.of(1895, DECEMBER, 28));
     }
 }

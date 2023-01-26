@@ -8,5 +8,5 @@ public interface FilmStorage {
     Film findFilmById(Long id);
     Film addFilm(Film film);
     Film updateFilm(Film film);
-
+    String deleteFilm(Long id);
 }

@@ -14,9 +14,7 @@ class FilmControllerTest {
     void realeseDateMustBeAfter28DECEMBER1895() {
         InMemoryFilmStorage inMemoryFilmStorage = new InMemoryFilmStorage();
         Film film = new Film("test", "test description", LocalDate.of(1800, JANUARY, 1), 100);
-        Throwable thrown = assertThrows(ValidationException.class, () -> {
-            inMemoryFilmStorage.addFilm(film);
-        });
+        Throwable thrown = assertThrows(ValidationException.class, () -> inMemoryFilmStorage.addFilm(film));
         assertNotNull(thrown.getMessage());
     }
 }

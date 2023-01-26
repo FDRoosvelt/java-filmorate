@@ -1,20 +1,45 @@
 package ru.yandex.practicum.filmorate.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.ObjectNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class UserService {
+    UserStorage userStorage;
 
-    public User addFriend(UserStorage userStorage, Long id, Long friendId) {
+    @Autowired
+    public UserService (InMemoryUserStorage inMemoryUserStorage) {
+        userStorage = inMemoryUserStorage;
+    }
+
+    public Collection<User> getUsers() {
+        return userStorage.getUsers();
+    }
+
+    public User addUser(User user) {
+        return userStorage.addUser(user);
+    }
+
+    public User findUserById(Long id) {
+        return userStorage.findUserById(id);
+    }
+
+    public User updateUser(User user) {
+        return userStorage.updateUser(user);
+    }
+
+    public String deleteUser(Long id) {
+        return userStorage.deleteUser(id);
+    }
+
+    public User addFriend(Long id, Long friendId) {
         if (userStorage.findUserById(id) == null || userStorage.findUserById(friendId) == null) {
             throw new ObjectNotFoundException("Пользователь не найден");
         }
@@ -27,7 +52,7 @@ public class UserService {
         return userStorage.findUserById(id);
     }
 
-    public User deleteFriend(UserStorage userStorage, Long id, Long friendId) {
+    public User deleteFriend(Long id, Long friendId) {
         if (userStorage.findUserById(id) == null || userStorage.findUserById(friendId) == null) {
             throw new ObjectNotFoundException("Пользователь не найден");
         }
@@ -40,7 +65,7 @@ public class UserService {
         return userStorage.findUserById(id);
     }
 
-    public List<User> getUserFriends(UserStorage userStorage, Long id) {
+    public List<User> getUserFriends(Long id) {
         if (userStorage.findUserById(id) == null) {
             throw new ObjectNotFoundException("Пользователь не найден");
         }
@@ -53,7 +78,7 @@ public class UserService {
         return friendList;
     }
 
-    public Set<User> getMutualFriends(UserStorage userStorage, Long id, Long friendId) {
+    public Set<User> getMutualFriends(Long id, Long friendId) {
         if (userStorage.findUserById(id) == null || userStorage.findUserById(friendId) == null) {
             throw new ObjectNotFoundException("Пользователь не найден");
         }

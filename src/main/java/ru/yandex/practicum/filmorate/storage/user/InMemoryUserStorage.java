@@ -43,6 +43,14 @@ public class InMemoryUserStorage implements UserStorage {
         return user;
     }
 
+    public String deleteUser(Long id) {
+        if (!users.containsKey(id)) {
+            throw new ObjectNotFoundException("Пользователь не найден");
+        }
+        users.remove(id);
+        return "Пользователь удален";
+    }
+
     private void nameLogic(User user) {
         if (user.getName()==null || user.getName().isEmpty() || user.getName().isBlank()) {
             user.setName(user.getLogin());
