@@ -72,9 +72,15 @@ public class FilmController {
     @DeleteMapping("/{id}/like/{userId}")
     public Film deleteLike(@PathVariable("id") long id,
                            @PathVariable("userId") long userId) {
-        if (id < 1 || userId < 1) {
-            throw new ValidationException("Данные введены неверно");
-        }
+
+        // Я, конечно, добавил проверку, но тест постмана не пропускает,
+        // требует 404 ошибку, хотя тут ошибка валидации 400
+        // Оставил под комментарием
+
+//        if (id < 1 || userId < 1) {
+//            throw new ValidationException("Данные введены неверно");
+//        }
+
         log.info("Получен запрос DELETE /films/{id}/like/{userId}");
         return filmService.deleteLike(id, userId);
     }

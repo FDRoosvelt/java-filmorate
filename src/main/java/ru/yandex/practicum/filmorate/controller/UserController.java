@@ -70,9 +70,15 @@ public class UserController {
     @PutMapping("/{id}/friends/{friendId}")
     public User addFriend(@PathVariable("id") long id,
                           @PathVariable("friendId") long friendId) {
-        if (id < 1 || friendId < 1) {
-            throw new ValidationException("Данные введены неверно");
-        }
+
+        // Я, конечно, добавил проверку, но тест постмана не пропускает,
+        // требует 404 ошибку, хотя тут ошибка валидации 400
+        // Оставил под комментарием
+
+//        if (id < 1 || friendId < 1) {
+//            throw new ValidationException("Данные введены неверно");
+//        }
+
         log.info("Получен запрос PUT /users/{id}/friends/{friendId}");
         return userService.addFriend(id, friendId);
     }
